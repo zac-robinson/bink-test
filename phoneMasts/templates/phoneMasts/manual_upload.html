@@ -1,0 +1,99 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <h1 class="text-center">Manual Upload of Mast Data</h1>
+
+        <form class="form-horizontal" action="{% url 'phoneMasts:manual_upload' %}" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="property_name">Property Name:</label>
+                <div class="col-sm-10">
+                    <input name="property_name" type="text" class="form-control" id="property_name" placeholder="Enter property name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="property_address_1">Property Address 1:</label>
+                <div class="col-sm-10">
+                    <input name="property_address_1" type="text" class="form-control" id="property_address_1" placeholder="Enter property address 1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="property_address_2">Property Address 2:</label>
+                <div class="col-sm-10">
+                    <input name="property_address_2" type="text" class="form-control" id="property_address_2" placeholder="Enter property address 2">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="property_address_3">Property Address 3:</label>
+                <div class="col-sm-10">
+                    <input name="property_address_3" type="text" class="form-control" id="property_address_3" placeholder="Enter property address 3">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="property_address_4">Property Address 4:</label>
+                <div class="col-sm-10">
+                    <input name="property_address_4" type="text" class="form-control" id="property_address_4" placeholder="Enter property address 4">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="unit_name">Unit Name:</label>
+                <div class="col-sm-10">
+                    <input name="unit_name" type="text" class="form-control" id="unit_name" placeholder="Enter unit name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="tenant_name">Tenant Name:</label>
+                <div class="col-sm-10">
+                    <input name="tenant_name" type="text" class="form-control" id="tenant_name" placeholder="Enter tenant name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="lease_start">Lease Start Date:</label>
+                <div class="col-sm-10">
+                    <input name="lease_start_date" type="text" class="form-control" id="lease_start" placeholder="Enter lease start date">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="lease_end">Lease End Date:</label>
+                <div class="col-sm-10">
+                    <input name="lease_end_date" type="text" class="form-control" id="lease_end" placeholder="Enter lease end date">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="lease_years">Lease Years:</label>
+                <div class="col-sm-10">
+                    <input name="lease_years" type="text" class="form-control" id="lease_years" placeholder="Enter lease years">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="current_rent">Current Rent:</label>
+                <div class="col-sm-10">
+                    <input name="current_rent" type="text" class="form-control" id="current_rent" placeholder="Enter current rent">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" class="btn btn-success" value="Submit">
+                    <a href="{% url 'phoneMasts:index' %}" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        </form>
+
+    </body>
+</html>

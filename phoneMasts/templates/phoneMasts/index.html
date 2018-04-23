@@ -1,0 +1,85 @@
+{% load static %}<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <h1 class="text-center">Bink Mast Test</h1>
+        {% if masts_by_lease_amount %}
+            <table class="table table-hover table-condensed table-data">
+                <thead>
+                    <tr>
+                        <th>Property Name</th>
+                        <th>Property Address 1</th>
+                        <th>Property Address 2</th>
+                        <th>Property Address 3</th>
+                        <th>Property Address 4</th>
+                        <th>Unit Name</th>
+                        <th>Tenant Name</th>
+                        <th class="th-lease-date">Lease Start Date</th>
+                        <th class="th-lease-date">Lease End Date</th>
+                        <th>Lease Years</th>
+                        <th>Current Rent</th>
+                    </tr>
+                </thead>
+
+            {% for mast in masts_by_lease_amount %}
+                <tr>
+                    <td>{{ mast.property_name }}</td>
+                    <td>{{ mast.property_address_1 }}</td>
+                    <td>{{ mast.property_address_2 }}</td>
+                    <td>{{ mast.property_address_3 }}</td>
+                    <td>{{ mast.property_address_4 }}</td>
+                    <td>{{ mast.unit_name }}</td>
+                    <td>{{ mast.tenant_name }}</td>
+                    <td>{{ mast.lease_start_date }}</td>
+                    <td>{{ mast.lease_end_date }}</td>
+                    <td>{{ mast.lease_years }}</td>
+                    <td>{{ mast.current_rent }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+
+            <br/>
+            <p class="lead text-center">The total rent for these masts is: {{ total_rent }}</p>
+
+        {% else %}
+            <p>No mast data available.</p>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-4 col-xs-offset-2">
+                <form action="{% url 'phoneMasts:sort' %}" method="get">
+                    {% csrf_token %}
+                    <input class="btn btn-info btn-lg btn-margin" type="submit" name="submit" value="Sort"/>
+                </form>
+
+                <form action="{% url 'phoneMasts:upload' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <input class="btn btn-info btn-lg btn-margin" type="file" name="my_file" accept=".csv">
+                        <input class="btn btn-primary btn-lg btn-margin" type="submit" name="submit" value="Upload"/>
+                        <a href="{% url 'phoneMasts:manual_upload' %}" class="btn btn-default btn-lg">Manually upload data</a>
+                </form>
+            </div>
+
+            {% if filtered_mast_dict and masts_by_lease_amount %}
+                <div class="col-md-offset-8">
+                    <table class="table table-hover table-condensed table-tenant">
+                        <th>Tenant Name</th>
+                        <th>Number of Masts</th>
+
+                        {% for mast in filtered_mast_dict %}
+                            <tr>
+                                <td>{{ mast }}</td>
+                                <td>{{ filtered_mast_dict|get_item:mast }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </body>
+</html>
