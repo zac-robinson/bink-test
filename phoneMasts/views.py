@@ -11,7 +11,6 @@ order = 1
 
 
 def index(request):
-    messages.add_message(request, messages.INFO, 'Hello world.')
     return render_list(request)
 
 
@@ -67,14 +66,6 @@ def sort(request):
         return render_list(request)
 
 
-def get_data():
-    global order
-    sort_value = '-current_rent'
-    if order > 0:
-        sort_value = 'current_rent'
-    return PhoneMasts.objects.order_by(sort_value)[:5]
-
-
 def render_list(request):
     masts_by_lease_amount = get_sorted_data_by_rent(order)
     num_of_masts = get_mast_dict()
@@ -93,14 +84,3 @@ def render_list(request):
         'filtered_mast_dict': filtered_mast_dict
     }
     return render(request, 'phoneMasts/index.html', context)
-
-
-def get_mast_dict():
-    result_dict = {}
-    unique_tenants = PhoneMasts.objects.all().values_list('tenant_name', flat=True).distinct()
-
-    for tenant in unique_tenants:
-        number_of_masts = PhoneMasts.objects.filter(tenant_name__exact=tenant).count()
-        result_dict[tenant] = number_of_masts
-
-    return result_dict
