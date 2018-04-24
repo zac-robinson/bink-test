@@ -7,7 +7,7 @@
     <body>
         <h1 class="text-center">Manual Upload of Mast Data</h1>
 
-        <form class="form-horizontal" action="{% url 'phoneMasts:manual_upload' %}" method="post">
+        <form class="form-horizontal col-md-7 col-xs-offset-2" action="{% url 'phoneMasts:manual_upload' %}" method="post">
             {% csrf_token %}
 
             <div class="form-group">
