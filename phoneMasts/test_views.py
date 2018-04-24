@@ -2,8 +2,6 @@ from django.test import TestCase
 from django.urls import reverse
 from phoneMasts.models import PhoneMasts
 
-# from . import views
-
 
 def create_phone_mast(field_name=None, override_value=None):
     mast = {
@@ -37,6 +35,7 @@ def create_phone_mast(field_name=None, override_value=None):
         current_rent=mast['current_rent']
     )
 
+
 class IndexViewTest(TestCase):
 
     def test_no_data(self):
@@ -52,3 +51,21 @@ class IndexViewTest(TestCase):
             response.context['masts_by_lease_amount'],
             ['<PhoneMasts: test property>']
         )
+
+
+# class UploadFileViewTest(TestCase):
+#
+#     def test_no_data(self):
+#         response = self.client.post(reverse('phoneMasts:upload_file'))
+#         print(response)
+#         self.assertEqual(response.status_code, 200)
+#         self.assertContains(response, "No mast data available.")
+#         self.assertQuerysetEqual(response.context['masts_by_lease_amount'], [])
+#
+#     def test_with_valid_phone_mast(self):
+#         create_phone_mast()
+#         response = self.client.get(reverse('phoneMasts:index'))
+#         self.assertQuerysetEqual(
+#             response.context['masts_by_lease_amount'],
+#             ['<PhoneMasts: test property>']
+#         )
