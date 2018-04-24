@@ -4,13 +4,14 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .forms import UploadFileForm, ManualUploadForm
 from .handle_upload import handle_file_upload, handle_manual_upload
-
+from .utils import *
 from .models import PhoneMasts
 
 order = 1
 
 
 def index(request):
+    messages.add_message(request, messages.INFO, 'Hello world.')
     return render_list(request)
 
 
@@ -75,7 +76,7 @@ def get_data():
 
 
 def render_list(request):
-    masts_by_lease_amount = get_data()
+    masts_by_lease_amount = get_sorted_data_by_rent(order)
     num_of_masts = get_mast_dict()
     filtered_mast_dict = {}
 

@@ -12,7 +12,7 @@ def get_mast_dict():
     return result_dict
 
 
-def get_data(order):
+def get_sorted_data_by_rent(order):
     sort_value = '-current_rent'
     if order > 0:
         sort_value = 'current_rent'
