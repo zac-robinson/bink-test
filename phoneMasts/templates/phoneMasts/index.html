@@ -76,8 +76,12 @@
             {% if filtered_mast_dict and masts_by_lease_amount %}
                 <div class="col-md-offset-8">
                     <table class="table table-hover table-condensed table-tenant">
-                        <th>Tenant Name</th>
-                        <th>Number of Masts</th>
+                        <thead>
+                            <tr>
+                                <th>Tenant Name</th>
+                                <th>Number of Masts</th>
+                            </tr>
+                        </thead>
 
                         {% for mast in filtered_mast_dict %}
                             <tr>
