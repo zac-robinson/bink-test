@@ -29,12 +29,8 @@ def upload_file(request):
                                 "File fail to upload",
                                 extra_tags='alert alert-danger')
             return HttpResponseRedirect(reverse('phoneMasts:index'))
-    else:
-        form = UploadFileForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'phoneMasts/index.html', context)
+
+    return render(request, 'phoneMasts/index.html')
 
 
 def manual_upload(request):
@@ -51,12 +47,8 @@ def manual_upload(request):
                                 "Failed to upload data",
                                 extra_tags='alert alert-danger')
             return HttpResponseRedirect(reverse('phoneMasts:index'))
-    else:
-        form = ManualUploadForm()
-    context = {
-        'form': form,
-    }
-    return render(request, 'phoneMasts/manual_upload.html', context)
+
+    return render(request, 'phoneMasts/manual_upload.html')
 
 
 def sort(request):

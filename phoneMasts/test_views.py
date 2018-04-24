@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from decimal import Decimal
 from phoneMasts.models import PhoneMasts
+import phoneMasts.views as views
 
 
 def create_phone_mast(override_tenant='tenant_name',
@@ -157,30 +158,154 @@ class ManualUploadViewTest(TestCase):
     def test_no_data(self):
         response = self.client.get(reverse('phoneMasts:manual_upload'))
         self.assertEqual(response.status_code, 200)
-        print(response.context)
 
 
-# class UploadFileViewTest(TestCase):
+class UploadFileViewTest(TestCase):
 
-#     def test_no_data(self):
-#         response = self.client.post(reverse('phoneMasts:upload'))
-#         print(response)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertContains(response, "No mast data available.")
-#         self.assertQuerysetEqual(response.context['masts_by_lease_amount'], [])
-
-#     def test_with_valid_phone_mast(self):
-#         create_phone_mast()
-#         response = self.client.get(reverse('phoneMasts:upload'))
-#         self.assertQuerysetEqual(
-#             response.context['masts_by_lease_amount'],
-#             ['<PhoneMasts: test property>']
-#         )
+    def test_url_redirect(self):
+        response = self.client.post(reverse('phoneMasts:upload'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/masts/')
 
 
-# class SortViewTest(TestCase):
 
-#     def test_no_data(self):
-#         response = self.client.get(reverse('phoneMasts:sort'))
-#         self.assertEqual(response.status_code, 200)
-#         print(response)
+class SortViewTest(TestCase):
+
+    def test_no_data(self):
+        response = self.client.get(reverse('phoneMasts:sort'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['total_rent'], 0)
+        self.assertEqual(response.context['filtered_mast_dict'], {})
+        self.assertContains(response, "No mast data available.")
+        self.assertQuerysetEqual(response.context['masts_by_lease_amount'], [])
+
+    def test_with_single_phone_mast(self):
+        expected = {
+                'tenant_name': 1
+            }
+
+        create_phone_mast()
+        response = self.client.get(reverse('phoneMasts:sort'))
+
+        self.assertEqual(response.context['total_rent'], 150)
+        self.assertEqual(response.context['filtered_mast_dict'], expected)
+        self.assertQuerysetEqual(
+            response.context['masts_by_lease_amount'],
+            ['<PhoneMasts: property_name>']
+        )
+
+    def test_with_two_phone_masts_ascending(self):
+        views.order = -1
+        expected = {
+                'tenant_name': 1,
+                'zac': 1
+            }
+
+        create_phone_mast()
+        create_phone_mast(override_tenant='zac',
+                          override_property_name='test',
+                          override_current_rent=2000)
+
+        response = self.client.get(reverse('phoneMasts:sort'))
+
+        self.assertEqual(response.context['total_rent'], 2150)
+        self.assertEqual(response.context['filtered_mast_dict'], expected)
+        self.assertQuerysetEqual(
+            response.context['masts_by_lease_amount'],
+            ['<PhoneMasts: property_name>', '<PhoneMasts: test>']
+        )
+
+    def test_with_two_phone_masts_descending(self):
+        views.order = 1
+        expected = {
+                'tenant_name': 1,
+                'zac': 1
+            }
+
+        create_phone_mast()
+        create_phone_mast(override_tenant='zac',
+                          override_property_name='test',
+                          override_current_rent=2000)
+
+        response = self.client.get(reverse('phoneMasts:sort'))
+
+        self.assertEqual(response.context['total_rent'], 2150)
+        self.assertEqual(response.context['filtered_mast_dict'], expected)
+        self.assertQuerysetEqual(
+            response.context['masts_by_lease_amount'],
+            ['<PhoneMasts: test>', '<PhoneMasts: property_name>']
+        )
+
+    def test_with_more_than_five_phone_masts_ascending(self):
+        views.order = -1
+        expected = {
+                'tenant_name': 7
+            }
+
+        create_phone_mast()
+        create_phone_mast(override_property_name='test',
+                          override_current_rent=2000)
+
+        create_phone_mast(override_property_name='test property',
+                          override_current_rent=300)
+
+        create_phone_mast(override_property_name='test property 2',
+                          override_current_rent=5000)
+
+        create_phone_mast(override_property_name='test property 3',
+                          override_current_rent=40)
+
+        create_phone_mast(override_property_name='test property 4',
+                          override_current_rent=75)
+
+        create_phone_mast(override_property_name='test property 5',
+                          override_current_rent=1500)
+
+        response = self.client.get(reverse('phoneMasts:sort'))
+
+        self.assertEqual(response.context['total_rent'], 2065)
+        self.assertEqual(response.context['filtered_mast_dict'], expected)
+        self.assertQuerysetEqual(
+            response.context['masts_by_lease_amount'],
+            ['<PhoneMasts: test property 3>', '<PhoneMasts: test property 4>',
+             '<PhoneMasts: property_name>', '<PhoneMasts: test property>',
+             '<PhoneMasts: test property 5>'
+            ]
+        )
+
+    def test_with_more_than_five_phone_masts_descending(self):
+        views.order = 1
+        expected = {
+                'tenant_name': 7
+            }
+
+        create_phone_mast()
+        create_phone_mast(override_property_name='test',
+                          override_current_rent=2000)
+
+        create_phone_mast(override_property_name='test property',
+                          override_current_rent=300)
+
+        create_phone_mast(override_property_name='test property 2',
+                          override_current_rent=5000)
+
+        create_phone_mast(override_property_name='test property 3',
+                          override_current_rent=40)
+
+        create_phone_mast(override_property_name='test property 4',
+                          override_current_rent=75)
+
+        create_phone_mast(override_property_name='test property 5',
+                          override_current_rent=1500)
+
+        response = self.client.get(reverse('phoneMasts:sort'))
+
+        self.assertEqual(response.context['total_rent'], 8950)
+        self.assertEqual(response.context['filtered_mast_dict'], expected)
+        self.assertQuerysetEqual(
+            response.context['masts_by_lease_amount'],
+            ['<PhoneMasts: test property 2>', '<PhoneMasts: test>',
+             '<PhoneMasts: test property 5>', '<PhoneMasts: test property>',
+             '<PhoneMasts: property_name>'
+            ]
+        )
